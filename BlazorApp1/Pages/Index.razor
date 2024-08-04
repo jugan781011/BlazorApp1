@@ -1,0 +1,285 @@
+﻿@page "/"
+@using BlazorApp1.Models
+@using BlazorApp1.ResourceParameters
+@using BlazorApp1.Services
+
+<PageTitle>員工資料</PageTitle>
+<div style="width:900px">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-white p-0">
+            <li class="breadcrumb-item">基本資料</li>
+            <li class="breadcrumb-item active" aria-current="page">員工資料</li>
+        </ol>
+    </nav>
+    <SfGrid @ref="Grid" DataSource="@tb_UserMembers" AllowPaging="true"
+            Toolbar="@ToolbarItems">
+        <SfToolbar>
+            <ToolbarItems>
+                <ToolbarItem Type="ItemType.Input" Align="ItemAlign.Left">
+                    <Template>
+                        <div class="container" style="padding:10px">
+                            <div class="row">
+                                <div class="col-md-6 d-flex">
+                                    <label class="mr-2">員工帳號:</label>
+                                    <SfTextBox @bind-Value="@Account1" CssClass="mr-2" Width="150px"></SfTextBox>
+                                </div>
+                                <div class="col-md-6 d-flex">
+                                    <label class="mr-2">員工姓名:</label>
+                                    <SfTextBox @bind-Value="@UserName1" CssClass="mr-2" Width="150px"></SfTextBox>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 d-flex">
+                                    <label class="mr-2">電話:</label>
+                                    <SfTextBox @bind-Value="@Tel1" CssClass="mr-2" Width="150px"></SfTextBox>
+                                </div>                                
+                            </div>
+                        </div>
+                        <SfButton Content="查詢" OnClick="@SearchClick" CssClass="e-info ml-3"></SfButton>
+                        <SfButton Content="清除" OnClick="@ClearClick" CssClass="e-danger ml-3"></SfButton>
+                    </Template>
+                </ToolbarItem>
+            </ToolbarItems>
+        </SfToolbar>
+        <GridEditSettings Mode="EditMode.Dialog" AllowAdding="true" AllowEditing="true" AllowDeleting="true">    
+            <HeaderTemplate>
+                <span>@GetDialogHeader(context as tb_UserMember)</span>
+            </HeaderTemplate>
+            <Template>
+                @{
+                    var list = (context as tb_UserMember);
+                    <div class="container" style="height: auto; width: 900px">
+                        <div class="panel panel-info">
+                            <div class="panel-body">
+                                <table id="Table1" style="width: 99%;" runat="server" class="table table-striped table-hover">
+                                    <tr>
+                                        <td class="auto-style1">員工帳號:</td>
+                                        <td style="border: 1px #000000 solid">
+                                            <SfTextBox @bind-Value="@(list.Account)"></SfTextBox>
+                                        </td>
+                                        <td class="auto-style1">密碼:</td>
+                                        <td style="border: 1px #000000 solid">
+                                            <SfTextBox @bind-Value="@(list.Password)"></SfTextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="auto-style1">員工姓名:</td>
+                                        <td style="border: 1px #000000 solid">
+                                            <SfTextBox @bind-Value="@(list.UserName)"></SfTextBox>
+                                        </td>
+                                        <td class="auto-style1">電話:</td>
+                                        <td style="border: 1px #000000 solid">
+                                            <SfTextBox @bind-Value="@(list.Tel)"></SfTextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="auto-style1">Email:</td>
+                                        <td style="border: 1px #000000 solid">
+                                            <SfTextBox @bind-Value="@(list.Email)"></SfTextBox>
+                                        </td>
+                                        <td class="auto-style1">生日:</td>
+                                        <td style="border: 1px #000000 solid">
+                                            <SfDateTimePicker @bind-Value="@(list.BirthDay)" Format="yyyy/MM/dd"></SfDateTimePicker>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </Template>
+            <FooterTemplate>
+                <SfButton OnClick="@Save" IsPrimary="true" Disabled="Disable1">@FooterSaveButtonText</SfButton>
+                <SfButton OnClick="@Cancel">取消</SfButton>
+            </FooterTemplate>
+        </GridEditSettings>
+        <GridPageSettings PageSize="20"></GridPageSettings>
+        <GridEvents OnActionBegin="ActionBeginHandler" RowSelected="RowSelectHandler" TValue="tb_UserMember">
+        </GridEvents>
+        <GridColumns>
+            <GridColumn AllowAdding="false" IsPrimaryKey="true" Field=@nameof(tb_UserMember.Id) HeaderText="ID" Width="60px" Visible="false"/>
+            <GridColumn Field=@nameof(tb_UserMember.Account) HeaderText="員工帳號" Width="100"></GridColumn>
+            <GridColumn Field=@nameof(tb_UserMember.UserName) HeaderText="使用者姓名" Width="100"></GridColumn>
+            <GridColumn Field=@nameof(tb_UserMember.Tel) HeaderText="電話" Width="100"></GridColumn>
+            <GridColumn Field=@nameof(tb_UserMember.Email) HeaderText="Email" Width="150"></GridColumn>
+            <GridColumn Field=@nameof(tb_UserMember.BirthDay) HeaderText="生日" Format="yyyy/MM/dd" Width="150"></GridColumn>
+        </GridColumns>
+    </SfGrid>
+
+    <SfDialog @ref="Dialog" Width="250px" Visible="false" ShowCloseIcon="true" IsModal="true">        
+        <DialogTemplates>
+            <Header>確認刪除</Header>
+            <Content> 真的要刪除?</Content>
+        </DialogTemplates>
+        <DialogButtons>
+            <DialogButton>
+                <DialogButton Content="是" IsPrimary="true" OnClick="@OkClick"></DialogButton>
+            </DialogButton>
+            <DialogButton>
+                <DialogButton Content="否" OnClick="@CancelClick"></DialogButton>
+            </DialogButton>
+        </DialogButtons>
+    </SfDialog>    
+</div>
+
+@code {
+    public List<tb_UserMember> tb_UserMembers { get; set; }
+
+    public SfGrid<tb_UserMember> Grid { get; set; }
+
+    public string FooterSaveButtonText { get; set; }
+
+    [Inject]
+    public Itb_UserMemberService tb_UserMemberService { get; set; }
+
+    [Parameter]
+    public bool Enable1 { get; set; }
+
+    SfDialog Dialog;
+
+    public int sId { get; set; }
+
+    public bool Disable1 { get; set; }
+
+    private List<string> ToolbarItems = new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel" };
+
+    protected override void OnInitialized()
+    {        
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                await LoadPage();
+            }
+            catch
+            {               
+            }
+
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    string BranchOfficeCode1 { get; set; } //分店、部門代號
+
+    private async Task LoadPage()
+    {
+        await SearchClick();
+    }
+
+
+    #region 面板搜尋
+    public string Account1 { get; set; }
+
+    public string UserName1 { get; set; }
+
+    public string Tel1 { get; set; }
+
+
+    public async Task SearchClick()
+    {
+        UserMemberParamaters Paramaters = new UserMemberParamaters
+            {
+                Account1 = Account1,
+                UserName1 = UserName1,
+                Tel1 = Tel1
+            };
+        tb_UserMembers = (await tb_UserMemberService.Search(Paramaters)).ToList();
+        Grid.Refresh();
+    }
+
+    //搜尋清除
+    private void ClearClick()
+    {
+        Account1 = null;
+        UserName1 = null;
+        Tel1 = null;       
+    }
+    #endregion
+
+    public async Task Cancel()
+    {
+        await Grid.CloseEditAsync();
+    }
+    public async Task Save()
+    {
+        await Grid.EndEditAsync();
+    }
+
+    public string GetDialogHeader(tb_UserMember currency)
+    {
+        if (currency.Id == 0)
+        {
+            FooterSaveButtonText = "新增";
+            return "新增";
+        }
+        else
+        {
+            FooterSaveButtonText = "保存";
+            return "編輯";
+        }
+    }    
+
+    public async void ActionBeginHandler(ActionEventArgs<tb_UserMember> Args)
+    {
+        if (Args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Save))
+        {
+            if (Args.Action == "Add")
+            {
+                var apiResponse = await tb_UserMemberService.Add(Args.Data);
+                if (apiResponse.StatusCode == 200)
+                {
+                    await jsRuntime.InvokeAsync<object>("Alert1", $"新增成功");
+                }
+                else
+                {
+                    await jsRuntime.InvokeAsync<object>("Alert1", $"新增失敗，錯誤訊息：{apiResponse.Content.Result}");
+                }     
+                await SearchClick();                
+            }
+            else
+            {              
+                var apiResponse = await tb_UserMemberService.Update(Args.Data);
+                if (apiResponse.StatusCode == 200)
+                {
+                    await jsRuntime.InvokeAsync<object>("Alert1", $"修改成功");
+                }
+                else
+                {
+                    await jsRuntime.InvokeAsync<object>("Alert1", $"修改失敗，錯誤訊息：{apiResponse.Content.Result}");
+                }             
+                await SearchClick();
+            }
+        }
+        if (Args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Delete))
+        {
+            Args.Cancel = true;
+            await Dialog.ShowAsync();           
+        }
+    }
+
+    //刪除
+    public void RowSelectHandler(RowSelectEventArgs<tb_UserMember> Args)
+    {
+        sId = Args.Data.Id;
+    }
+    public async void OkClick()
+    {
+        await tb_UserMemberService.Delete(sId);       
+        await jsRuntime.InvokeAsync<object>("Alert1", $"刪除成功");    
+        await SearchClick();
+        await Dialog.HideAsync();
+    }
+    private void CancelClick()
+    {
+        Dialog.HideAsync();
+    }
+}
+

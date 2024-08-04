@@ -1,0 +1,149 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@namespace BlazorApp1.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="BlazorApp1.styles.css" rel="stylesheet" />
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />   
+    <link href="~/css/all.min.css" rel="stylesheet" />
+    <script src="~/css/jquery-1.12.4.js"></script>
+    <script src="~/css/jquery-ui.js"></script>
+    <script src="~/script.js"></script>
+    <link href="_content/Syncfusion.Blazor/styles/material.css" rel="stylesheet" />  
+</head>
+<body>
+    @RenderBody()
+
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.server.js"></script>
+</body>
+</html>
+
+<style>
+    .table td, .table th {
+        /* padding: 0.75rem; */
+        vertical-align: top;
+        border-top: 1px solid #000000;
+    }
+
+    .auto-style1 {
+        height: 30px;
+        width: 150px;
+        background-color: #FFFFCC;
+        font-family: 標楷體;
+        color: #000000;
+        font-size: large;
+        border: 1px #000000 solid;
+    }
+
+    .auto-style2 {
+        height: 30px;
+        width: 630px;
+        font-family: 標楷體;
+        color: #000000;
+        font-size: medium;
+        border: 1px #000000 solid;
+    }
+
+    .styletd2 {
+        height: 30px;
+        font-family: 標楷體;
+        color: #000000;
+        font-size: medium;
+        border: 1px #000000 solid;
+    }
+
+    .styletd3 {
+        height: 30px;
+        font-family: 標楷體;
+        font-size: medium;
+    }
+
+    .e-spin-down {
+        display: none !important;
+    }
+
+    .e-spin-up {
+        display: none !important;
+    }
+
+    .e-grid .e-rowcell {
+        padding: 4px 5px;
+    }
+
+    .image-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .close-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 5px;
+        padding: 5px;
+        background-color: red;
+        color: white;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+    }
+
+
+    .e-edit-dialog .e-gridform .e-table {
+        border-collapse: separate;
+        border-spacing: 0px;
+        width: 100%;
+        padding: 0 0 0 0;
+    }
+
+    .e-grid .e-headercell, .e-grid .e-detailheadercell {
+        padding: 0 5px 0;
+    }
+
+    label.e-float-text {
+        position: relative;
+        padding-left: 0;
+        top: 15%;
+        color: black;
+    }
+
+    .e-dialog .e-icon-dlg-close::before {
+        content: none;
+        visibility: hidden;
+    }
+
+    .e-dialog .e-dlg-header-content .e-btn.e-dlg-closeicon-btn {
+        display: none;
+    }
+
+    .form-row {
+        height: 30px
+    }
+
+    .e-spin-down {
+        display: none !important;
+    }
+
+    .e-spin-up {
+        display: none !important;
+    }
+</style>
+
